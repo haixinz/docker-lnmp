@@ -1,0 +1,22 @@
+2018/12/12 20:17:19 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:17:19 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:23:13 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:23:13 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:23:48 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:23:48 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:31:39 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:31:39 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:57:50 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 20:57:50 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:09:45 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:09:45 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:13:43 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:13:43 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:14:02 [error] 7#7: *1 FastCGI sent in stderr: "Primary script unknown" while reading response header from upstream, client: 192.168.111.1, server: _, request: "GET / HTTP/1.1", upstream: "fastcgi://172.18.0.5:9000", host: "192.168.111.128:8080"
+2018/12/12 21:14:02 [error] 7#7: *1 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 192.168.111.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "192.168.111.128:8080", referrer: "http://192.168.111.128:8080/"
+2018/12/12 21:14:30 [error] 9#9: *4 FastCGI sent in stderr: "Primary script unknown" while reading response header from upstream, client: 192.168.111.1, server: _, request: "GET / HTTP/1.1", upstream: "fastcgi://172.18.0.5:9000", host: "192.168.111.128:8080"
+2018/12/12 21:14:30 [error] 9#9: *4 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 192.168.111.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "192.168.111.128:8080", referrer: "http://192.168.111.128:8080/"
+2018/12/12 21:14:46 [error] 6#6: *7 FastCGI sent in stderr: "Primary script unknown" while reading response header from upstream, client: 192.168.111.1, server: _, request: "GET / HTTP/1.1", upstream: "fastcgi://172.18.0.5:9000", host: "192.168.111.128:8080"
+2018/12/12 21:14:46 [error] 6#6: *7 rewrite or internal redirection cycle while internally redirecting to "/index.html", client: 192.168.111.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "192.168.111.128:8080", referrer: "http://192.168.111.128:8080/"
+2018/12/12 21:23:36 [alert] 9#9: sched_setaffinity() failed (22: Invalid argument)
+2018/12/12 21:23:36 [alert] 7#7: sched_setaffinity() failed (22: Invalid argument)

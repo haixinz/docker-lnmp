@@ -17,7 +17,7 @@
 - redis 4.0.0
 - swoole latest
 - memcached 3.0.4
-
+- mcrypt 由于php7.2移除了内置的mcrypt 函数，为了兼容老的代码，故加上此函数
 > 注意:标注完全版的，通过切换full分支获得文件才能安装
 
 
@@ -28,6 +28,7 @@
 wget https://pecl.php.net/get/redis-4.0.0.tgz -O php/pkg/redis.tgz  
 wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz -O php/pkg/libmemcached.tar.gz  
 wget https://pecl.php.net/get/memcached-3.0.4.tgz -O php/pkg/memcached.tgz  
+wget http://pecl.php.net/get/mcrypt-1.0.1.tgz -O php/pkg/mcrypt-1.0.1.tgz 
 ```
 
 #### 2.docker-compose构建项目

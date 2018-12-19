@@ -9,12 +9,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && apt-get install -y \
         git \
         vim \
+        procps\
         curl \
         wget \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
 		libssl-dev \
+		libmcrypt-dev \
 	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 	&& docker-php-ext-install -j$(nproc) gd \
         && docker-php-ext-install zip \
@@ -27,8 +29,12 @@ RUN apt-get update && apt-get install -y \
 COPY ./pkg/redis.tgz /home/redis.tgz
 COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz
 COPY ./pkg/memcached.tgz /home/memcached.tgz
+COPY ./pkg/mcrypt-1.0.1.tgz /home/mcrypt-1.0.1.tgz
 
-# 安装 PECL 拓展，这里我们安装的是Redis
+# pecl 安装mcrypt扩展，兼容老代码
+RUN pecl install /home/mcrypt-1.0.1.tgz && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
+
+# pecl 安装 Redis
 RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
 # 安装libmemcached
@@ -64,6 +70,7 @@ ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 RUN rm -f /home/redis.tgz
 RUN rm -f /home/libmemcached.tar.gz
 RUN rm -f /home/memcached.tgz
+RUN rm -f /home/mcrypt-1.0.1.tgz
 
 WORKDIR /data
 

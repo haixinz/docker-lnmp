@@ -4,10 +4,12 @@ services:
     build: ./php/
     ports:
       - "9000:9000"
+      - "8599:8599"
+      - "8588:8588"
     links:
       - mysql:mysql
       - redis:redis
-      - memcached:memcached
+      #- memcached:memcached
     volumes:
       - /mnt/hgfs/project:/data/www:rw
       - ./php/php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
@@ -35,39 +37,70 @@ services:
       - "8080:8080"
       - "8081:8081"
       - "8082:8082"
+      - "8083:8083"
+      - "8084:8084"
     restart: always
     command: nginx -g 'daemon off;'
     container_name: nginx
 
   mysql:
-      build: ./mysql
-      ports:
-        - "3306:3306"
-      volumes:
-        - ../data/mysql:/var/lib/mysql:rw
-        - ../logs/mysql:/var/lib/mysql-logs:rw
-        - ./mysql/conf.d:/etc/mysql/conf.d:ro
-      environment:
-        MYSQL_USER: root
-        MYSQL_PASSWORD: 123456
-        MYSQL_ROOT_PASSWORD: 123456
-      restart: always
-      command: "--character-set-server=utf8"
-      container_name: mysql
+    build: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../data/mysql:/var/lib/mysql:rw
+      - ../logs/mysql:/var/lib/mysql-logs:rw
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    restart: always
+    command: "--character-set-server=utf8"
+    container_name: mysql
 
   redis:
-      build: ./redis
-      ports:
-        - "6379:6379"
-      volumes:
-        - ./redis/redis.conf:/etc/redis/redis.conf:rw
-        - ../data/redis:/data:rw
-        - ../logs/redis:/var/log/:rw
-      restart: always
-      container_name: redis
+    build: ./redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf:rw
+      - ../data/redis:/data:rw
+      - ../logs/redis:/var/log/:rw
+    restart: always
+    container_name: redis
 
-  memcached:
-      build: ./memcached
-      ports:
-        - "11211:11211"
-      container_name: memcached
+  hexo:
+    build: ./hexo
+    #image: haocen/hexo-with-hexo-hey
+    ports:
+      - "4000:4000"
+    volumes:
+      - /mnt/hgfs/project/blog/source:/opt/hexo/haixinz/source:rw
+      - /mnt/hgfs/project/blog/themes:/opt/hexo/haixinz/themes:rw
+      - /mnt/hgfs/project/blog/scaffolds:/opt/hexo/haixinz/scaffolds:rw
+      - /mnt/hgfs/project/blog/_config.yml:/opt/hexo/haixinz/_config.yml
+      - /root/.ssh:/root/.ssh
+    container_name: hexo
+    #command: hexo s
+  #memcached:
+    #build: ./memcached
+    #ports:
+    #  - "11211:11211"
+    #container_name: memcached
+    #restart: always
+  #rpc:
+    #build: ./rpc/
+    #image: "services_rpc:0.1"
+    #ports:
+    #  - "9090:9090"
+    #links:
+    #  - mysql:mysql
+    #  - redis:redis
+    #  - memcached:memcached
+    #volumes:
+    #  - /mnt/hgfs/project:/data/www:rw
+    #  - ./php/php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
+    #restart: always
+    #command: tail -f /dev/null
+    #container_name: rpc

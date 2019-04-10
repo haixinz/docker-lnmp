@@ -1,23 +1,26 @@
-FROM php:7.2-fpm
+FROM php:7.2-cli
 MAINTAINER qingkong
 
 # 设置时区
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN cat /etc/issue
 
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+ADD sources.list /etc/apt/
+RUN cat /etc/apt/sources.list
 # 更新安装依赖包和PHP核心拓展
-RUN apt-get update && apt-get install -y \
-        git \
-        vim \
-        procps\
-        curl \
-        wget \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-		libssl-dev \
-		libmcrypt-dev \
-	&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+RUN apt-get update && apt-get install -y automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config wget 
+		
+# 安装 thrift
+RUN wget http://mirrors.tuna.tsinghua.edu.cn/apache/thrift/0.11.0/thrift-0.11.0.tar.gz \
+    && tar -xzvf thrift-0.11.0.tar.gz \
+    && cd thrift-0.11.0 && ./configure && make && make install
+
+RUN apt-get install -y git vim procps curl libfreetype6-dev libjpeg62-turbo-dev libpng-dev libmcrypt-dev 
+
+# 安装PHP扩展    
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 	&& docker-php-ext-install -j$(nproc) gd \
         && docker-php-ext-install zip \
         && docker-php-ext-install pdo_mysql \
@@ -66,11 +69,14 @@ ENV COMPOSER_HOME /root/composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
+
 # 删除扩展包
 RUN rm -f /home/redis.tgz
 RUN rm -f /home/libmemcached.tar.gz
 RUN rm -f /home/memcached.tgz
 RUN rm -f /home/mcrypt-1.0.1.tgz
+
+RUN rm -f /thrift-0.11.0.tar.gz
 
 WORKDIR /data
 

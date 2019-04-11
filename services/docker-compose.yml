@@ -4,8 +4,6 @@ services:
     build: ./php/
     ports:
       - "9000:9000"
-      - "8599:8599"
-      - "8588:8588"
     links:
       - mysql:mysql
       - redis:redis
@@ -32,8 +30,6 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ../logs/nginx:/var/log/nginx
     ports:
-      - "80:80"
-      - "443:443"
       - "8080:8080"
       - "8081:8081"
       - "8082:8082"
@@ -72,7 +68,6 @@ services:
 
   hexo:
     build: ./hexo
-    #image: haocen/hexo-with-hexo-hey
     ports:
       - "4000:4000"
     volumes:
@@ -82,7 +77,7 @@ services:
       - /mnt/hgfs/project/blog/_config.yml:/opt/hexo/haixinz/_config.yml
       - /root/.ssh:/root/.ssh
     container_name: hexo
-    #command: hexo s
+
   #memcached:
     #build: ./memcached
     #ports:

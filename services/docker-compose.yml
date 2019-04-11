@@ -17,14 +17,14 @@ services:
       - ../logs/php-fpm:/var/log/php-fpm:rw
     restart: always
     command: php-fpm
-    container_name: php-fpm
+    container_name: fpm
 
   nginx:
     build: ./nginx
     depends_on:
       - php-fpm
     links:
-      - php-fpm:php-fpm
+      - php-fpm:fpm
     volumes:
       - /mnt/hgfs/project:/data/www:rw
       - ./nginx/conf.d:/etc/nginx/conf.d:ro

@@ -4,6 +4,8 @@ services:
     build: ./php/
     ports:
       - "9000:9000"
+      - "8501:8501"
+      - "8502:8502"
     links:
       - mysql:mysql
       - redis:redis
@@ -84,18 +86,3 @@ services:
     #  - "11211:11211"
     #container_name: memcached
     #restart: always
-  #rpc:
-    #build: ./rpc/
-    #image: "services_rpc:0.1"
-    #ports:
-    #  - "9090:9090"
-    #links:
-    #  - mysql:mysql
-    #  - redis:redis
-    #  - memcached:memcached
-    #volumes:
-    #  - /mnt/hgfs/project:/data/www:rw
-    #  - ./php/php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
-    #restart: always
-    #command: tail -f /dev/null
-    #container_name: rpc

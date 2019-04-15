@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
         procps\
         curl \
         wget \
+        cron \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
@@ -24,7 +25,7 @@ RUN apt-get update && apt-get install -y \
         && docker-php-ext-install opcache \
         && docker-php-ext-install mysqli \
         && rm -r /var/lib/apt/lists/*
-
+        
 # 将预先下载好的拓展包从宿主机拷贝进去
 COPY ./pkg/redis.tgz /home/redis.tgz
 COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz

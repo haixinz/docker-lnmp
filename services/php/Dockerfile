@@ -28,8 +28,8 @@ RUN apt-get update && apt-get install -y \
         
 # 将预先下载好的拓展包从宿主机拷贝进去
 COPY ./pkg/redis.tgz /home/redis.tgz
-COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz
-COPY ./pkg/memcached.tgz /home/memcached.tgz
+#COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz
+#COPY ./pkg/memcached.tgz /home/memcached.tgz
 COPY ./pkg/mcrypt-1.0.1.tgz /home/mcrypt-1.0.1.tgz
 
 # pecl 安装mcrypt扩展，兼容老代码
@@ -38,29 +38,35 @@ RUN pecl install /home/mcrypt-1.0.1.tgz && echo "extension=mcrypt.so" > /usr/loc
 # pecl 安装 Redis
 RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
+# pecl 安装 MongoDb
+RUN pecl install mongodb && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
+
+# pecl 安装swoole
+RUN pecl install swoole && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
+
 # 安装libmemcached
-RUN tar zxvf /home/libmemcached.tar.gz \
-    && cd libmemcached-1.0.18 \
-    && ./configure --prefix=/usr/local/libmemcached --with-memcached \
-    && make && make install
+#RUN tar zxvf /home/libmemcached.tar.gz \
+#    && cd libmemcached-1.0.18 \
+#    && ./configure --prefix=/usr/local/libmemcached --with-memcached \
+#    && make && make install
 
 # 安装memcached
-RUN tar zxvf /home/memcached.tgz \
-    && cd memcached-3.0.4 \
-    && phpize \
-    && ./configure -enable-memcached -with-php-config=/usr/local/bin/php-config -with-zlib-dir -with-libmemcached-dir=/usr/local/libmemcached -prefix=/usr/local/phpmemcached -disable-memcached-sasl \
-    && make && make install \
-    && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+#RUN tar zxvf /home/memcached.tgz \
+#    && cd memcached-3.0.4 \
+#    && phpize \
+#    && ./configure -enable-memcached -with-php-config=/usr/local/bin/php-config -with-zlib-dir -with-libmemcached-dir=/usr/local/libmemcached -prefix=/usr/local/phpmemcached -disable-memcached-sasl \
+#    && make && make install \
+#    && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
 
 # 安装 Swoole
-RUN cd /home \
-    && git clone https://gitee.com/swoole/swoole.git \
-    && cd swoole \
-    && phpize \
-    && ./configure --enable-openssl -with-php-config=/usr/local/bin/php-config \
-    && make \
-    && make install \
-    && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
+#RUN cd /home \
+#    && git clone https://gitee.com/swoole/swoole.git \
+#    && cd swoole \
+#    && phpize \
+#    && ./configure --enable-openssl -with-php-config=/usr/local/bin/php-config \
+#    && make \
+#    && make install \
+#    && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
 
 # 安装 Composer
 ENV COMPOSER_HOME /root/composer
@@ -69,10 +75,10 @@ ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
 # 删除扩展包
 RUN rm -f /home/redis.tgz
-RUN rm -f /home/libmemcached.tar.gz
-RUN rm -f /home/memcached.tgz
+#RUN rm -f /home/libmemcached.tar.gz
+#RUN rm -f /home/memcached.tgz
 RUN rm -f /home/mcrypt-1.0.1.tgz
-
+#RUN rm -f /home/swoole
 WORKDIR /data
 
 # 写权限

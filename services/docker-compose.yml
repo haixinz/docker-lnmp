@@ -68,6 +68,20 @@ services:
     restart: always
     container_name: redis
 
+  mongodb:
+    build: ./mongodb
+    #volumes:
+      #- ../data/mongodb:/data/db:rw
+      #- ./mongodb/mongodb.conf:/data/configdb/mongodb.conf:rw
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=soterea@2019
+    container_name: mongodb
+    restart: always
+
+
   hexo:
     build: ./hexo
     ports:
@@ -86,6 +100,7 @@ services:
     #  - "11211:11211"
     #container_name: memcached
     #restart: always
+
   #rpc:
     #build: ./rpc/
     #image: "services_rpc:0.1"

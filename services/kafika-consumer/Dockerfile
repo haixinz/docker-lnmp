@@ -91,8 +91,7 @@ RUN pecl install mongodb
 RUN docker-php-ext-enable redis.so && \
     docker-php-ext-enable swoole.so && \
     docker-php-ext-enable rdkafka.so && \
-    docker-php-ext-enable mongodb.so && \
-
+    docker-php-ext-enable mongodb.so
 
 RUN rm -rf /home/librdkafka
 

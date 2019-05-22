@@ -54,16 +54,6 @@ ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 # fix some path error
 RUN mkdir -p /usr/src/php/ext
 
-# install protobuf
-RUN cd /home \
-    && git clone https://github.com/allegro/php-protobuf.git \
-    && cd /home/php-protobuf \
-    && phpize \
-    && ./configure --with-php-config=/usr/local/bin/php-config \
-    && make \
-    && make install \
-    && echo "extension=protobuf.so" > /usr/local/etc/php/conf.d/protobuf.ini
-
 #------------------------------------------------------
 # install php pdo_mysql mysqli extension
 RUN docker-php-ext-install mysqli pdo_mysql
@@ -76,6 +66,17 @@ RUN apk add libpng-dev && docker-php-ext-install gd
 
 RUN docker-php-ext-install pdo_mysql mysqli exif fileinfo intl json opcache
 
+# install protobuf
+RUN cd /home \
+    && git clone https://github.com/allegro/php-protobuf.git \
+    && cd /home/php-protobuf \
+    && phpize \
+    && ./configure --with-php-config=/usr/local/bin/php-config \
+    && make \
+    && make install \
+    && echo "extension=protobuf.so" > /usr/local/etc/php/conf.d/protobuf.ini
+
+#install libkafka
 RUN git clone https://github.com/edenhill/librdkafka.git && \
     cd librdkafka && \
     ./configure && \
@@ -84,6 +85,9 @@ RUN git clone https://github.com/edenhill/librdkafka.git && \
 #install kafka
 RUN pecl install rdkafka
 
+#rm librdkafka
+RUN rm -rf /home/librdkafka
+
 #install swoole 
 RUN pecl install swoole
 
@@ -91,17 +95,17 @@ RUN pecl install swoole
 RUN pecl install redis
 
 #install mcrypt
-RUN pecl install mcrypt
+RUN pecl install mcrypt-1.0.2
 
-# other extension
+# enable ext
 RUN docker-php-ext-enable redis.so && \
     docker-php-ext-enable swoole.so && \
     docker-php-ext-enable rdkafka.so && \
     docker-php-ext-enable mcrypt.so
 
-RUN rm -rf /home/librdkafka
+#php.ini
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
-RUN cp php.ini-production php.ini
 
 # supervisor config file 
 #ADD ./conf/supervisord/supervisord.conf /etc/

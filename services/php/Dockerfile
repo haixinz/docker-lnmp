@@ -27,22 +27,28 @@ RUN apt-get update && apt-get install -y \
         && rm -r /var/lib/apt/lists/*
         
 # 将预先下载好的拓展包从宿主机拷贝进去
-COPY ./pkg/redis.tgz /home/redis.tgz
+#COPY ./pkg/redis.tgz /home/redis.tgz
 #COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz
 #COPY ./pkg/memcached.tgz /home/memcached.tgz
-COPY ./pkg/mcrypt-1.0.1.tgz /home/mcrypt-1.0.1.tgz
+#COPY ./pkg/mcrypt-1.0.1.tgz /home/mcrypt-1.0.1.tgz
 
 # pecl 安装mcrypt扩展，兼容老代码
-RUN pecl install /home/mcrypt-1.0.1.tgz && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
+RUN pecl install mcrypt-1.0.2 && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
 
 # pecl 安装 Redis
-RUN pecl install /home/redis.tgz && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+RUN pecl install redis && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
 # pecl 安装 MongoDb
 RUN pecl install mongodb && echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini
 
 # pecl 安装swoole
 RUN pecl install swoole && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
+
+# pecl 安装xdebug
+RUN pecl install xdebug && echo "extension=xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
+
+# pecl 安装swoole
+
 
 # 安装libmemcached
 #RUN tar zxvf /home/libmemcached.tar.gz \
@@ -74,10 +80,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
 # 删除扩展包
-RUN rm -f /home/redis.tgz
+#RUN rm -f /home/redis.tgz
 #RUN rm -f /home/libmemcached.tar.gz
 #RUN rm -f /home/memcached.tgz
-RUN rm -f /home/mcrypt-1.0.1.tgz
+#RUN rm -f /home/mcrypt-1.0.1.tgz
 #RUN rm -f /home/swoole
 WORKDIR /data
 

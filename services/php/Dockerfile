@@ -24,13 +24,8 @@ RUN apt-get update && apt-get install -y \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
         && docker-php-ext-install mysqli \
+        && docker-php-ext-install pcntl \
         && rm -r /var/lib/apt/lists/*
-        
-# 将预先下载好的拓展包从宿主机拷贝进去
-#COPY ./pkg/redis.tgz /home/redis.tgz
-#COPY ./pkg/libmemcached.tar.gz /home/libmemcached.tar.gz
-#COPY ./pkg/memcached.tgz /home/memcached.tgz
-#COPY ./pkg/mcrypt-1.0.1.tgz /home/mcrypt-1.0.1.tgz
 
 # pecl 安装mcrypt扩展，兼容老代码
 RUN pecl install mcrypt-1.0.2 && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
@@ -45,24 +40,7 @@ RUN pecl install mongodb && echo "extension=mongodb.so" > /usr/local/etc/php/con
 RUN pecl install swoole && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
 
 # pecl 安装xdebug
-RUN pecl install xdebug && echo "extension=xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
-
-# pecl 安装swoole
-
-
-# 安装libmemcached
-#RUN tar zxvf /home/libmemcached.tar.gz \
-#    && cd libmemcached-1.0.18 \
-#    && ./configure --prefix=/usr/local/libmemcached --with-memcached \
-#    && make && make install
-
-# 安装memcached
-#RUN tar zxvf /home/memcached.tgz \
-#    && cd memcached-3.0.4 \
-#    && phpize \
-#    && ./configure -enable-memcached -with-php-config=/usr/local/bin/php-config -with-zlib-dir -with-libmemcached-dir=/usr/local/libmemcached -prefix=/usr/local/phpmemcached -disable-memcached-sasl \
-#    && make && make install \
-#    && echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+RUN pecl install xdebug && echo "zend_extension=xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
 
 # 安装 Swoole
 #RUN cd /home \
@@ -79,12 +57,6 @@ ENV COMPOSER_HOME /root/composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 
-# 删除扩展包
-#RUN rm -f /home/redis.tgz
-#RUN rm -f /home/libmemcached.tar.gz
-#RUN rm -f /home/memcached.tgz
-#RUN rm -f /home/mcrypt-1.0.1.tgz
-#RUN rm -f /home/swoole
 WORKDIR /data
 
 # 写权限

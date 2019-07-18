@@ -27,10 +27,11 @@ RUN apt-get update && apt-get install -y \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
         && docker-php-ext-install mysqli \
+        && docker-php-ext-install pcntl \
         && rm -r /var/lib/apt/lists/*
 
 # pecl 安装mcrypt扩展，兼容老代码
-RUN pecl install mcrypt-1.0.2 && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
+#RUN pecl install mcrypt-1.0.2 && echo "extension=mcrypt.so" > /usr/local/etc/php/conf.d/mcrypt.ini
 
 # pecl 安装 Redis
 RUN pecl install redis && echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
@@ -41,6 +42,8 @@ RUN pecl install mongodb && echo "extension=mongodb.so" > /usr/local/etc/php/con
 # pecl 安装swoole
 RUN pecl install swoole && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini
 
+# pecl 安装xdebug
+RUN pecl install xdebug && echo "zend_extension=xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini
 
 # 安装 Composer
 ENV COMPOSER_HOME /root/composer

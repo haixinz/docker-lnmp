@@ -1,34 +1,51 @@
 version: '2'
 services:
   php-fpm:
-    build: ./php/
+    build: ./php-fpm/
+    ports:
+      - "9000:9000"
+    links:
+      - mysql:mysql
+      - redis:redis
+    volumes:
+      - /mnt/hgfs/project:/data/www:rw
+      #- /home/qingkong/project:/data/www:rw
+      - ./php-fpm/php.ini:/usr/local/etc/php/php.ini:rw
+      - ./php-fpm/php-fpm.conf:/usr/local/etc/php-fpm.conf:rw
+      - ../logs/php-fpm:/var/log/php-fpm:rw
+    restart: always
+    command: php-fpm
+    container_name: php-fpm
+
+  php-cli:
+    build: ./php-cli/
     ports:
       - "8501:8501"
       - "8502:8502"
     links:
       - mysql:mysql
       - redis:redis
-      #- memcached:memcached
     volumes:
-      - /home/qingkong/project:/data/www:rw
-      - ./php/php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
-      - ./php/php-fpm.conf:/usr/local/etc/php-fpm.conf:ro
-      - ../logs/php-fpm:/var/log/php-fpm:rw
+      - /mnt/hgfs/project:/data/www:rw
+      #- /home/qingkong/project:/data/www:rw
+      - ./php-cli/php.ini:/usr/local/etc/php/php.ini:ro # 当前php配置文件；可以拷贝修改php-dev.ini为想要的配置
+      - ../logs/php-cli:/var/log/php-cli:rw
     restart: always
-    command: php-fpm
-    container_name: fpm
+    command: bash -c " /etc/init.d/cron start && /usr/bin/supervisord -nc /usr/local/etc/supervisor/supervisord.conf"
+    container_name: php-cli
 
   nginx:
     build: ./nginx
     depends_on:
       - php-fpm
     links:
-      - php-fpm:fpm
+      - php-fpm:php-fpm
     volumes:
-      - /home/qingkong/project:/data/www:rw
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - /mnt/hgfs/project:/data/www:rw
+      #- /home/qingkong/project:/data/www:rw
+      - ./nginx/conf.d:/etc/nginx/conf.d:rw
       - ./nginx/certs/:/etc/nginx/certs
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:rw
       - ../logs/nginx:/var/log/nginx
     ports:
       - "8080:8080"
@@ -47,7 +64,7 @@ services:
     volumes:
       - ../data/mysql:/var/lib/mysql:rw
       - ../logs/mysql:/var/lib/mysql-logs:rw
-      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./mysql/conf.d:/etc/mysql/conf.d:rw
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: 123456

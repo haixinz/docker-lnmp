@@ -51,6 +51,12 @@ RUN pecl install swoole && docker-php-ext-enable swoole
 # pecl 安装mcrypt扩展，兼容老代码
 #RUN pecl install mcrypt-1.0.2 && docker-php-ext-enable mcrypt
 
+#安装 kafka 扩展
+RUN git clone https://github.com/edenhill/librdkafka.git && \
+    cd librdkafka && \
+    ./configure && \
+    make && make install
+RUN pecl install rdkafka && docker-php-ext-enable rdkafka
 
 # 安装 Composer
 ENV COMPOSER_HOME /root/composer

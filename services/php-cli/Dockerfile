@@ -33,7 +33,9 @@ RUN docker-php-ext-install zip \
     && docker-php-ext-install opcache \
     && docker-php-ext-install mysqli \
     && docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+    && docker-php-ext-install gd \
+    && docker-php-ext-install bcmath\
+    && docker-php-ext-intall pcntl
 
 
 # 安装 Redis
